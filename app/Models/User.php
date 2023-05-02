@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
@@ -50,9 +51,17 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function department(): BelongsTo
+    public function department(): BelongsToMany
     {
-        return $this->belongsTo(Department::class)->select('id', 'name');
+        return $this->belongsToMany(Department::class)
+            ->withPivot(
+                'id',
+                'user_id',
+                'department_id',
+                'department_user.updated_at',
+            )
+            ->orderBy('department_user.updated_at', 'desc')
+            ->limit(1);
     }
     public function position(): BelongsTo
     {

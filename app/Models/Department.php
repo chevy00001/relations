@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Department extends Model
 {
@@ -19,8 +20,16 @@ class Department extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function user(): HasMany
+    public function user(): BelongsToMany
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class)
+            ->withPivot(
+                'id',
+                'user_id',
+                'department_id',
+                'department_user.updated_at',
+            )
+            ->orderBy('department_user.updated_at', 'desc')
+            ->limit(1);
     }
 }
