@@ -60,8 +60,8 @@ class User extends Authenticatable
                 'department_id',
                 'department_user.updated_at',
             )
-            ->orderBy('department_user.updated_at', 'desc')
-            ->limit(1);
+            ->latest('department_user.updated_at')
+            ->take(1);
     }
     public function position(): BelongsTo
     {

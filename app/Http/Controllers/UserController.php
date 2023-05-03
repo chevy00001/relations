@@ -14,7 +14,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $usersEloquent = User::with('department', 'position',)->get();
+        $usersEloquent = User::with('department', 'position')->get();
         // $department = Department::with('user')->get();
 
 
@@ -44,9 +44,9 @@ class UserController extends Controller
         //     }
         // }
 
-
-
-        return $usersEloquent;
+        //return data from pivot
+        return $usersEloquent->first()->department[0]->pivot->id;
+        // return $usersEloquent->first()->department[0]->name;
     }
 
     /**
